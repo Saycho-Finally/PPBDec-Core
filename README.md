@@ -109,6 +109,11 @@ E2_experiment_design_v2.md  实验设计与文献锚点
 - 治理层（`governance`）与可观测性（`observability`）的版本校验为占位实现
 - E2 的答案一致率口径为粗提取（正则），绝对数值被系统性低估（结论方向不受影响）
 
+## 实验依据
+
+三类验证实验（迁移等价性 / 开放决策实证 / 编排运行时）的完整结果与口径见
+[reports/DecisionCore验证实验报告_2026-10-04.md](reports/DecisionCore验证实验报告_2026-10-04.md)。
+
 ## 测试状态
 
 - 核心七测：类型路由 / coverage 守门 / 审计不可变性 / registry 熵与饿死 / 末档标注
