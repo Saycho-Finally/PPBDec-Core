@@ -63,7 +63,7 @@ def early_stop_legacy(vote_keys_tail: list[str]) -> bool:
     return early_stop_predicate(vote_keys_tail)
 
 
-# ---- 迁移点 2：Addenda-Cache · Tier 判定（verifiable）----
+# ---- 迁移点 2：PPBExt-Cache · Tier 判定（verifiable）----
 
 def cache_tier_predicate(two_probe_hit_tokens: tuple[int, int]) -> bool:
     """原逻辑（CacheTiers.probe 的判定核）：第二次探测 hit>0 → Tier 1（自动前缀缓存）。"""

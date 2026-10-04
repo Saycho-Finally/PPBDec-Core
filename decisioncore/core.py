@@ -1,4 +1,4 @@
-"""DecisionCore：统一判定/选择子层（Addenda-Decide 核心）。
+"""DecisionCore：统一判定/选择子层（PPBDec-Core 核心）。
 
 设计约束（SPEC.md §一，非协商项）：
   1. 决策 = 选项集构造（上游，不在本模块）+ 选项内选择（本模块）。
