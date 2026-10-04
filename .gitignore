@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.key
+.env
+decisions.jsonl
+e2_decisions*.jsonl
+e2_llm_fusion_audit.jsonl
+_audit_test.jsonl

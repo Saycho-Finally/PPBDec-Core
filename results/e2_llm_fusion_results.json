@@ -1,0 +1,53 @@
+{
+  "tasks": [
+    {
+      "task": "task_1",
+      "llm_fusion_recall": 1.0,
+      "llm_fusion_precision": 0.75,
+      "llm_fusion_f1": 0.857,
+      "det_fusion_f1": 0.286,
+      "best_single_recall": 0.0,
+      "n_lines_fused": 4,
+      "fp": 1,
+      "fusion_head": "- [可变默认参数] `process_batches` 的默认参数 `results=[]`：默认列表会在多次调用之间共享，导致结果不断累积并被污染。\n- [异常处理] `process_batches` 中的 `except Exception: pass`：静默吞掉所有异常，隐藏数据处理错误并直接跳过出错批次。\n- [边界条件/参数校验] `process_batches` 中的 `rang"
+    },
+    {
+      "task": "task_2",
+      "llm_fusion_recall": 1.0,
+      "llm_fusion_precision": 1.0,
+      "llm_fusion_f1": 1.0,
+      "det_fusion_f1": 0.286,
+      "best_single_recall": 0.0,
+      "n_lines_fused": 5,
+      "fp": 0,
+      "fusion_head": "- [逻辑错误] dedupe：去重键只使用 `row.keys()`，没有包含对应的值，导致键相同但值不同的行被错误去重。\n- [运行时错误] dedupe：`sorted(row.keys())` 在字典键类型不可比较时会抛出 `TypeError`，例如同时存在 `str` 和 `int` 键。\n- [健壮性问题] dedupe：用 `str(sorted(row.keys()))` 作为去"
+    },
+    {
+      "task": "task_3",
+      "llm_fusion_recall": 1.0,
+      "llm_fusion_precision": 0.3,
+      "llm_fusion_f1": 0.462,
+      "det_fusion_f1": 0.167,
+      "best_single_recall": 0.0,
+      "n_lines_fused": 10,
+      "fp": 7,
+      "fusion_head": "- [并发] worker 中 `counter += 1`：多线程下不是原子操作，存在竞态条件，会丢失计数；应使用锁或原子计数。\n- [未定义] worker 中 `process(t)`：`process` 未定义，调用时会触发 `NameError`（除非外部定义）。\n- [属性] worker 中 `t.ready()`：假定 `t` 有 `ready()` 方法，否则会触发 `Attri"
+    },
+    {
+      "task": "task_4",
+      "llm_fusion_recall": 1.0,
+      "llm_fusion_precision": 0.375,
+      "llm_fusion_f1": 0.545,
+      "det_fusion_f1": 0.125,
+      "best_single_recall": 0.0,
+      "n_lines_fused": 8,
+      "fp": 5,
+      "fusion_head": "- [逻辑错误] is_expired：过期判断条件写反；`expiry_ts > now_ts` 表示尚未到期，却返回 `True`，应改为 `expiry_ts < now_ts`（或按边界约定用 `<=`）。\n- [边界条件] is_expired：未处理 `expiry_ts == now_ts`；若“等于当前时间”也算过期，当前实现会返回 `False`，造成漏判。\n- [异常处理] a"
+    }
+  ],
+  "summary": {
+    "llm_fusion_f1": 0.716,
+    "det_fusion_f1": 0.216,
+    "best_single_recall": 0.0
+  }
+}

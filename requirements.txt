@@ -1,0 +1,4 @@
+# 核心零依赖
+
+# E2 实验运行需要（DeepSeek API）：
+requests>=2.28

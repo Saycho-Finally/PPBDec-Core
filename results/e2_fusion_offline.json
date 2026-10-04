@@ -1,0 +1,111 @@
+{
+  "per_task": [
+    {
+      "task": "task_1",
+      "gold_bugs": 3,
+      "clusters": 4,
+      "votes_dist": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "fused_recall_type": 0.333,
+      "fused_precision_type": 0.25,
+      "fused_f1_type": 0.286,
+      "best_single_recall": 0.0,
+      "avg_single_recall": 0.0,
+      "union_recall_all_candidates": 1.0
+    },
+    {
+      "task": "task_2",
+      "gold_bugs": 3,
+      "clusters": 11,
+      "votes_dist": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "fused_recall_type": 0.667,
+      "fused_precision_type": 0.182,
+      "fused_f1_type": 0.286,
+      "best_single_recall": 0.0,
+      "avg_single_recall": 0.0,
+      "union_recall_all_candidates": 1.0
+    },
+    {
+      "task": "task_3",
+      "gold_bugs": 3,
+      "clusters": 9,
+      "votes_dist": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "fused_recall_type": 0.333,
+      "fused_precision_type": 0.111,
+      "fused_f1_type": 0.167,
+      "best_single_recall": 0.0,
+      "avg_single_recall": 0.0,
+      "union_recall_all_candidates": 1.0
+    },
+    {
+      "task": "task_4",
+      "gold_bugs": 3,
+      "clusters": 13,
+      "votes_dist": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "fused_recall_type": 0.333,
+      "fused_precision_type": 0.077,
+      "fused_f1_type": 0.125,
+      "best_single_recall": 0.0,
+      "avg_single_recall": 0.0,
+      "union_recall_all_candidates": 1.0
+    },
+    {
+      "task": "task_5",
+      "gold_bugs": 3,
+      "clusters": 0,
+      "votes_dist": [],
+      "fused_recall_type": 0.0,
+      "fused_precision_type": 0,
+      "fused_f1_type": 0,
+      "best_single_recall": 0.0,
+      "avg_single_recall": 0.0,
+      "union_recall_all_candidates": 0.0
+    }
+  ],
+  "summary": {
+    "fusion_f1_mean": 0.173,
+    "best_single_mean": 0.0,
+    "avg_single_mean": 0.0,
+    "union_upper_bound_mean": 0.8
+  }
+}

@@ -1,0 +1,409 @@
+{
+  "meta": {
+    "ts": 1791031614.1338315,
+    "n_tasks": 5,
+    "n_reviews_per_task": 6
+  },
+  "tasks": [
+    {
+      "task": "task_1",
+      "scores": {
+        "heuristic": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 1,
+          "precision": 0.75,
+          "f1": 0.857,
+          "out_tokens": 137
+        },
+        "union_overlap": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 1,
+          "precision": 0.75,
+          "f1": 0.857,
+          "out_tokens": 137
+        },
+        "probe(flash)": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 1,
+          "precision": 0.75,
+          "f1": 0.857,
+          "out_tokens": 137
+        },
+        "llm_judge(pro)": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 1,
+          "precision": 0.75,
+          "f1": 0.857,
+          "out_tokens": 137
+        },
+        "fusion(pro)": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 1,
+          "precision": 0.75,
+          "f1": 0.857,
+          "out_tokens": 137
+        },
+        "single_best_recall": 1.0,
+        "single_avg_recall": 0.556,
+        "sample_usd": 0.0106
+      },
+      "reviews": [
+        {
+          "idx": 1,
+          "text": "- [可变默认参数] `process_batches` 的默认参数 `results=[]`：默认列表会在多次调用之间共享，导致结果不断累积并被污染。\n- [异常处理] `process_batches` 中的 `except Exception: pass`：静默吞掉所有异常，隐藏数据处理错误并直接跳过出错批次。\n- [边界条件/参数校验] `process_batches` 中的 `range(0, len(items), batch_size)`：未校验 `batch_size`，为 `0` 时会抛 `ValueError`，为负数时循环不执行而静默不处理任何数据。\n- [未初始化变量/边界条件] `find_last` 中的 `return target`：当 `items` 为空或 `predicate` 对所有元素都为假时，`target` 从未赋值，会抛出 `UnboundLocalError`。",
+          "out_tok": 2699
+        },
+        {
+          "idx": 2,
+          "text": "",
+          "out_tok": 3000
+        },
+        {
+          "idx": 3,
+          "text": "",
+          "out_tok": 3000
+        },
+        {
+          "idx": 4,
+          "text": "",
+          "out_tok": 3001
+        },
+        {
+          "idx": 5,
+          "text": "",
+          "out_tok": 2999
+        },
+        {
+          "idx": 6,
+          "text": "",
+          "out_tok": 3002
+        }
+      ]
+    },
+    {
+      "task": "task_2",
+      "scores": {
+        "heuristic": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 4,
+          "precision": 0.429,
+          "f1": 0.6,
+          "out_tokens": 177
+        },
+        "union_overlap": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 1,
+          "precision": 0.75,
+          "f1": 0.857,
+          "out_tokens": 128
+        },
+        "probe(flash)": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 4,
+          "precision": 0.429,
+          "f1": 0.6,
+          "out_tokens": 177
+        },
+        "llm_judge(pro)": {
+          "matched": 0,
+          "recall": 0.0,
+          "false_positives": 0,
+          "precision": 0,
+          "f1": 0,
+          "out_tokens": 0
+        },
+        "fusion(pro)": {
+          "matched": 0,
+          "recall": 0.0,
+          "false_positives": 0,
+          "precision": 0,
+          "f1": 0,
+          "out_tokens": 0
+        },
+        "single_best_recall": 1.0,
+        "single_avg_recall": 0.444,
+        "sample_usd": 0.0105
+      },
+      "reviews": [
+        {
+          "idx": 1,
+          "text": "",
+          "out_tok": 2999
+        },
+        {
+          "idx": 2,
+          "text": "",
+          "out_tok": 2999
+        },
+        {
+          "idx": 3,
+          "text": "",
+          "out_tok": 2999
+        },
+        {
+          "idx": 4,
+          "text": "- [逻辑错误] dedupe 的 `key = str(sorted(row.keys()))`：仅根据字典的键去重，没有考虑键对应的值，导致键相同但值不同的行被错误判为重复并丢弃。\n- [健壮性] dedupe 的 `sorted(row.keys())`：如果字典的键类型不可相互比较（如同时有 `int` 和 `str`），会抛出 `TypeError`。\n- [逻辑错误] normalize 的 `n.upper().strip()`：字符串是不可变对象，返回值没有赋回给 `n` 或 `names`，因此 `names` 实际没有被规范化。\n- [副作用] merge 的 `config = a`：`config` 和 `a` 引用同一个字典，`config.update(b)` 会直接修改调用者传入的 `a`，不符合通常 merge 返回新对象的预期。",
+          "out_tok": 2720
+        },
+        {
+          "idx": 5,
+          "text": "",
+          "out_tok": 2999
+        },
+        {
+          "idx": 6,
+          "text": "- [逻辑错误] dedupe：去重键只使用 `row.keys()`，没有包含对应的值，导致键相同但值不同的行被错误去重。\n- [运行时错误] dedupe：`sorted(row.keys())` 在字典键类型不可比较时会抛出 `TypeError`，例如同时存在 `str` 和 `int` 键。\n- [健壮性问题] dedupe：用 `str(sorted(row.keys()))` 作为去重键，依赖对象的 `repr`，可能发生字符串碰撞导致误判去重。\n- [逻辑错误] normalize：`n.upper().strip()` 返回新字符串但未赋值，字符串不可变，原 `names` 不会被修改。\n- [逻辑错误] normalize：即使写成 `n = n.upper().strip()`，也只是修改循环变量 `n`，不会更新列表元素。\n- [副作用/别名错误] merge：`config = a` 只复制引用，`config.update(b)` 会原地修改传入的 `a`。\n- [API 设计问题] merge：如果调用者不希望修改输入参数，应使用 `config = dict(a)` 或 `{**a, **b}` 来创建副本后再合并。",
+          "out_tok": 2848
+        }
+      ]
+    },
+    {
+      "task": "task_3",
+      "scores": {
+        "heuristic": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 7,
+          "precision": 0.3,
+          "f1": 0.462,
+          "out_tokens": 230
+        },
+        "union_overlap": {
+          "matched": 0,
+          "recall": 0.0,
+          "false_positives": 0,
+          "precision": 0,
+          "f1": 0,
+          "out_tokens": 0
+        },
+        "probe(flash)": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 7,
+          "precision": 0.3,
+          "f1": 0.462,
+          "out_tokens": 230
+        },
+        "llm_judge(pro)": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 7,
+          "precision": 0.3,
+          "f1": 0.462,
+          "out_tokens": 230
+        },
+        "fusion(pro)": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 7,
+          "precision": 0.3,
+          "f1": 0.462,
+          "out_tokens": 230
+        },
+        "single_best_recall": 0.0,
+        "single_avg_recall": 0.0,
+        "sample_usd": 0.0105
+      },
+      "reviews": [
+        {
+          "idx": 1,
+          "text": "",
+          "out_tok": 3000
+        },
+        {
+          "idx": 2,
+          "text": "",
+          "out_tok": 3001
+        },
+        {
+          "idx": 3,
+          "text": "- [并发] worker 中 `counter += 1`：多线程下不是原子操作，存在竞态条件，会丢失计数；应使用锁或原子计数。\n- [未定义] worker 中 `process(t)`：`process` 未定义，调用时会触发 `NameError`（除非外部定义）。\n- [属性] worker 中 `t.ready()`：假定 `t` 有 `ready()` 方法，否则会触发 `AttributeError`。\n- [未使用导入] 顶部 `import threading`：导入后未使用；如果是为了加锁，则代码中缺少实际锁。\n- [导入] read_config 中 `json.load(f)`：未导入 `json`，会触发 `NameError`。\n- [资源] read_config 中 `f = open(path)`：文件未显式关闭，异常时也会泄漏；应使用 `with open(path) as f:`。\n- [健壮性] read_config：未处理文件不存在、权限错误、JSON 解析错误等异常。\n- [设计] cached_fetch 中 `cache={}`：可变默认参数在函数定义时创建并在所有调用间共享，可能导致缓存污染/意外共享。\n- [未定义] cached_fetch 中 `expensive(key)`：`expensive` 未定义，调用时会触发 `NameError`（除非外部定义）。\n- [并发] cached_fetch 中检查-计算-写入：非线程安全，多线程可能重复计算同一 key 或产生覆盖；应加锁或使用线程安全缓存。",
+          "out_tok": 2464
+        },
+        {
+          "idx": 4,
+          "text": "",
+          "out_tok": 3000
+        },
+        {
+          "idx": 5,
+          "text": "",
+          "out_tok": 3000
+        },
+        {
+          "idx": 6,
+          "text": "",
+          "out_tok": 2999
+        }
+      ]
+    },
+    {
+      "task": "task_4",
+      "scores": {
+        "heuristic": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 4,
+          "precision": 0.429,
+          "f1": 0.6,
+          "out_tokens": 210
+        },
+        "union_overlap": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 3,
+          "precision": 0.571,
+          "f1": 0.727,
+          "out_tokens": 210
+        },
+        "probe(flash)": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 3,
+          "precision": 0.571,
+          "f1": 0.727,
+          "out_tokens": 210
+        },
+        "llm_judge(pro)": {
+          "matched": 0,
+          "recall": 0.0,
+          "false_positives": 0,
+          "precision": 0,
+          "f1": 0,
+          "out_tokens": 0
+        },
+        "fusion(pro)": {
+          "matched": 0,
+          "recall": 0.0,
+          "false_positives": 0,
+          "precision": 0,
+          "f1": 0,
+          "out_tokens": 0
+        },
+        "single_best_recall": 1.0,
+        "single_avg_recall": 0.333,
+        "sample_usd": 0.0103
+      },
+      "reviews": [
+        {
+          "idx": 1,
+          "text": "",
+          "out_tok": 3000
+        },
+        {
+          "idx": 2,
+          "text": "",
+          "out_tok": 3000
+        },
+        {
+          "idx": 3,
+          "text": "",
+          "out_tok": 3000
+        },
+        {
+          "idx": 4,
+          "text": "- [逻辑错误] is_expired：过期判断条件写反；`expiry_ts > now_ts` 表示尚未到期，却返回 `True`，应改为 `expiry_ts < now_ts`（或按边界约定用 `<=`）。\n- [边界条件] is_expired：未处理 `expiry_ts == now_ts`；若“等于当前时间”也算过期，当前实现会返回 `False`，造成漏判。\n- [异常处理] avg_scores：`scores` 为空时 `len(scores)` 为 0，`total / len(scores)` 会触发 `ZeroDivisionError`。\n- [健壮性] avg_scores：未校验 `scores` 中元素类型，若包含非数值元素，`total += s` 会触发 `TypeError`。\n- [边界/约定] slice_page：未明确 `page` 是否从 0 开始；若调用方按 1-based 页码传入，`start = page * size` 会跳过第一页，应使用 `(page - 1) * size`。\n- [输入验证] slice_page：未校验 `size`，当 `size <= 0` 时返回值不符合正常分页语义，`size` 为 0 会返回空列表，负数会产生异常切片行为。\n- [输入验证] slice_page：未校验 `page < 0`，负页码会按负数索引切片，可能返回列表尾部数据而不是报错。",
+          "out_tok": 2131
+        },
+        {
+          "idx": 5,
+          "text": "",
+          "out_tok": 3000
+        },
+        {
+          "idx": 6,
+          "text": "- [逻辑错误] `is_expired`：过期判断反了，`expiry_ts > now_ts` 表示尚未过期；已过期应为 `expiry_ts <= now_ts`。\n- [异常] `avg_scores`：当 `scores` 为空时，`len(scores)` 为 0，`total / len(scores)` 会抛出 `ZeroDivisionError`。\n- [边界条件] `slice_page`：未校验 `size`，当 `size <= 0` 时会产生错误或意外的切片结果，分页大小应为正整数。\n- [边界条件] `slice_page`：未校验 `page`，负数 `page` 会生成负的 `start`，因 Python 负数切片语义返回不符合分页预期的结果。\n- [约定/潜在] `slice_page`：若 `page` 按 1 开始编号，`start = page * size` 会跳过第一页，应改为 `(page - 1) * size`。\n- [健壮性/潜在] `avg_scores`：若 `scores` 是没有 `len()` 的迭代器或生成器，`len(scores)` 会抛出 `TypeError`。",
+          "out_tok": 2975
+        }
+      ]
+    },
+    {
+      "task": "task_5",
+      "scores": {
+        "heuristic": {
+          "matched": 3,
+          "recall": 1.0,
+          "false_positives": 0,
+          "precision": 0,
+          "f1": 0.0,
+          "out_tokens": 0
+        },
+        "union_overlap": {
+          "matched": 0,
+          "recall": 0.0,
+          "false_positives": 0,
+          "precision": 0,
+          "f1": 0,
+          "out_tokens": 0
+        },
+        "probe(flash)": {
+          "matched": 0,
+          "recall": 0.0,
+          "false_positives": 0,
+          "precision": 0,
+          "f1": 0,
+          "out_tokens": 0
+        },
+        "llm_judge(pro)": {
+          "matched": 0,
+          "recall": 0.0,
+          "false_positives": 0,
+          "precision": 0,
+          "f1": 0,
+          "out_tokens": 0
+        },
+        "fusion(pro)": {
+          "matched": 0,
+          "recall": 0.0,
+          "false_positives": 0,
+          "precision": 0,
+          "f1": 0,
+          "out_tokens": 15
+        },
+        "single_best_recall": 0.0,
+        "single_avg_recall": 0.0,
+        "sample_usd": 0.0108
+      },
+      "reviews": [
+        {
+          "idx": 1,
+          "text": "",
+          "out_tok": 2998
+        },
+        {
+          "idx": 2,
+          "text": "",
+          "out_tok": 3000
+        },
+        {
+          "idx": 3,
+          "text": "",
+          "out_tok": 2999
+        },
+        {
+          "idx": 4,
+          "text": "",
+          "out_tok": 3000
+        },
+        {
+          "idx": 5,
+          "text": "",
+          "out_tok": 3000
+        },
+        {
+          "idx": 6,
+          "text": "",
+          "out_tok": 3000
+        }
+      ]
+    }
+  ]
+}
