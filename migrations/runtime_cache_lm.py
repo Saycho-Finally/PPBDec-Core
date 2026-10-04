@@ -42,7 +42,7 @@ class CacheTierAwareProbe:
 
 class ContentGateDC:
     """LM 内容门 R1 的运行时切换（R2 佐证计分/R3 准入为批处理逻辑，
-    单条运行时包装先覆盖 R1——R2/R3 的接口占位见 TODO）。"""
+    单条运行时包装先覆盖 R1——R2/R3 的接口占位见 实现边界）。"""
 
     def __init__(self, dc: DecisionCore):
         self.dc = dc
@@ -67,5 +67,5 @@ class ContentGateDC:
         rec = self.dc.decide_verifiable(point, subject=date_str)
         return bool(rec.result)
 
-    # TODO: R2 佐证计分（TIER_W 加权）与 R3 准入（score>=2 or official）为
-    # 批处理组合逻辑，单条运行时包装需 curator 提供 per-claim 接口后再接。
+    # 实现边界：R2 佐证计分（TIER_W 加权）与 R3 准入（score>=2 或 official）属
+    # 批处理组合逻辑；其单条运行时包装需 curator 提供 per-claim 接口，当前仅覆盖 R1。

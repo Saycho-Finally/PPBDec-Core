@@ -13,12 +13,10 @@ import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-sys.path.insert(0, "D:/agentwork/workbuddy/code/1-思维方式/addenda-memory")
-sys.path.insert(0, "D:/agentwork/workbuddy/code/1-思维方式/exocortex")
-sys.path.insert(0, "D:/agentwork/workbuddy/code/1-思维方式/仓库2/cachecortex"
-                if os.path.isdir("D:/agentwork/workbuddy/code/1-思维方式/仓库2")
-                else "C:/Users/30312/Desktop/仓库2/cachecortex")
-sys.path.insert(0, "C:/Users/30312/Desktop/仓库/experiments")
+sys.path.insert(0, os.environ.get("ADDENDA_MEMORY_ROOT", "../PPBExt-Memory"))
+sys.path.insert(0, os.environ.get("EXOCORTEX_ROOT", "../PPBExt-Sample/exocortex"))
+sys.path.insert(0, os.environ.get("ADDENDA_CACHE_ROOT", "../PPBExt-Cache/cachecortex"))
+sys.path.insert(0, os.environ.get("ADDENDA_LM_EXPERIMENTS", "../PPBExt-Knowledge/experiments"))
 
 from decisioncore.orchestrator import ExpertAdapter, Orchestrator  # noqa: E402
 from decisioncore.registry import ExpertSpec  # noqa: E402

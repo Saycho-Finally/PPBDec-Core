@@ -41,7 +41,7 @@ program_verifier（$0，确定性）→ rule_engine（$0）→ majority_vote（$
 规则：沿光谱从左往右找第一个能处理该决策点的判定器。升级到 llm_judge 需要
 三条件同时成立（无谓词 + 枚举不完备 + 声明低移位风险）——实践中几乎不发生。
 
-## 实测：开放决策上 fusion 完胜 selection
+## 实测：开放决策上 fusion 显著优于 selection
 
 任务：5 段含已知 bug 的 Python 代码（15 个 gold bug，全部执行级验证）× 6 路采样评审 ×
 五档判定器对照（30 个候选，Flash low 档采样）：

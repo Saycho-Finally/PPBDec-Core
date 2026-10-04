@@ -9,19 +9,19 @@
 
 | 层 | 组件 | 状态 | 测试 |
 |---|---|---|---|
-| ① 治理层 | Governance（冲突/权限/依赖预检）| ✅ 新落地 | 6 项 |
-| ① 治理层 | CognitiveMonitor（token 速率/循环耗尽/工具错误/路由健康）| ✅ 新落地 | 6 项 |
-| ② Router | DecisionCore v0.2（类型学/光谱/审计/route）| ✅ | 17 项 |
+| ① 治理层 | Governance（冲突/权限/依赖预检）| [通过] 新落地 | 6 项 |
+| ① 治理层 | CognitiveMonitor（token 速率/循环耗尽/工具错误/路由健康）| [通过] 新落地 | 6 项 |
+| ② Router | DecisionCore v0.2（类型学/光谱/审计/route）| [通过] | 17 项 |
 | ③ Expert Pool | 知识/缓存/采样三位专家在线；记忆/工具修复候选 | 部分 | 迁移 15 + runtime 5 |
-| ④ 基础设施 | Ledger / ExpertRegistry / 进度落盘 / 预热保活 | ✅ | 含于上 |
+| ④ 基础设施 | Ledger / ExpertRegistry / 进度落盘 / 预热保活 | [通过] | 含于上 |
 
 **v2 七缺口的落地进度**：
-1. ✅ DecisionCore 未实现 → v0.2 完成
-2. ✅ ExpertSpec 注册表缺失 → experts.py 落地
-3. ✅ 路由熵/饿死监控缺失 → registry + CognitiveMonitor
-4. ✅ 治理层未接入 → Governance 落地（12/12）
+1. [通过] DecisionCore 未实现 → v0.2 完成
+2. [通过] ExpertSpec 注册表缺失 → experts.py 落地
+3. [通过] 路由熵/饿死监控缺失 → registry + CognitiveMonitor
+4. [通过] 治理层未接入 → Governance 落地（12/12）
 5. ⏳ Refusal Bias 处理 → 设计待做（P1）
-6. ✅ 认知可观测性三件套 → CognitiveMonitor 落地
+6. [通过] 认知可观测性三件套 → CognitiveMonitor 落地
 7. ⏳ 外挂粒度评估 → P1
 
 ## 二、优化路线
@@ -40,11 +40,11 @@
 
 ### P2（两周，小规模 API 成本）
 
-4. ✅ **ExpertPool 实战接线（2026-10-04 完成）**：`orchestrator.py`（ExpertAdapter +
+4. [通过] **ExpertPool 实战接线（2026-10-04 完成）**：`orchestrator.py`（ExpertAdapter +
    Orchestrator）——五件套全部注册为专家并端到端跑通复合任务（memory/sampler/verifier/
    cache/knowledge 五子任务全路由正确；无覆盖能力清晰失败）；`orchestration_demo.py` 为
    可运行 demo；14 项测试全过
-5. ✅ **观测回灌路由（2026-10-04 完成）**：rebalance() 实现 auxiliary-loss-free 的运行时版
+5. [通过] **观测回灌路由（2026-10-04 完成）**：rebalance() 实现 auxiliary-loss-free 的运行时版
    ——利用率 >50% 降 bias（实测 1.0→0.95）、饿死升 bias、bias 改变路由偏好（实测 rare 以
    bias 2.0 胜出 4 倍贵专家）。闭环：执行 → 观测 → bias → 路由
 6. **fusion 并入 DecisionCore**：E2 已证 fusion 优于 selection —— 把 fusion 判定器
