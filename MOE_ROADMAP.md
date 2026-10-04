@@ -40,11 +40,13 @@
 
 ### P2（两周，小规模 API 成本）
 
-4. **ExpertPool 实战接线**：当前 route 决策是"接口就位、未接线"——让 DecisionCore.route
-   真正调度三外挂（示例场景：一个任务进来，路由器按 capabilities 决定激活哪些外挂、
-   以什么顺序、各自预算多少）。这是 MoE 架构从"图"到"运行时"的关键一步
-5. **观测回灌路由**：CognitiveMonitor 的熵/饿死数据 → 运行时 bias 调整
-   （auxiliary-loss-free 模式的落地：过载外挂降 bias、饿死外挂升 bias，不改任务定义）
+4. ✅ **ExpertPool 实战接线（2026-10-04 完成）**：`orchestrator.py`（ExpertAdapter +
+   Orchestrator）——五件套全部注册为专家并端到端跑通复合任务（memory/sampler/verifier/
+   cache/knowledge 五子任务全路由正确；无覆盖能力清晰失败）；`orchestration_demo.py` 为
+   可运行 demo；14 项测试全过
+5. ✅ **观测回灌路由（2026-10-04 完成）**：rebalance() 实现 auxiliary-loss-free 的运行时版
+   ——利用率 >50% 降 bias（实测 1.0→0.95）、饿死升 bias、bias 改变路由偏好（实测 rare 以
+   bias 2.0 胜出 4 倍贵专家）。闭环：执行 → 观测 → bias → 路由
 6. **fusion 并入 DecisionCore**：E2 已证 fusion 优于 selection —— 把 fusion 判定器
    正式实现进光谱（当前是实验脚本），作为 open 决策的默认档
 
