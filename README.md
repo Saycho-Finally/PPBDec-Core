@@ -1,9 +1,11 @@
-# PPBDec-Core ｜ 补遗：LLM 应用的统一判定/选择子层 · DecisionCore
+# PPBDec-Core ｜ 补遗：LLM 应用的统一判定/选择子层 · 判定器光谱与证据链审计
 
 **一句话**：LLM 应用里到处都是决策（门、路由、早停、选择、预算），但它们散装在各自的项目里。
 本模块把它们抽成一个**统一的决策核**：决策点按类型声明，判定器沿确定性光谱路由，
 每次决策落一条不可变的证据链——并且**开放决策的默认判定器是"合并"而不是"挑选"**
 （fusion F1 0.716 vs 最好单候选，实测见下）。
+
+> 作者：Saycho-Finally（独立研究者） ｜ AI 使用声明见 [AI_DISCLOSURE.md](AI_DISCLOSURE.md) ｜ License: MIT ｜ 核心零依赖 ｜ Python ≥3.10（路由增强依赖 PPB-MoE）
 
 > License: MIT ｜ 依赖：核心零依赖 ｜ Python ≥3.10
 
