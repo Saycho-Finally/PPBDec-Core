@@ -7,8 +7,6 @@
 
 > 作者：Saycho-Finally（独立研究者） ｜ AI 使用声明见 [AI_DISCLOSURE.md](AI_DISCLOSURE.md) ｜ License: MIT ｜ 核心零依赖 ｜ Python ≥3.10（路由增强依赖 PPB-MoE）
 
-> License: MIT ｜ 依赖：核心零依赖 ｜ Python ≥3.10
-
 ---
 
 ## 设计约束（从实测批判继承，非协商项）
@@ -128,7 +126,6 @@ E2_experiment_design_v2.md  实验设计与文献锚点
 - GSA（arXiv 2503.04104）：open-ended 任务上 self-consistency 不适用而生成式聚合有效
 - BERT-as-a-Judge / INSPECTOR：小判定器匹敌大模型的实证
 - "A Coin Flip for Safety"（arXiv 2603.06594）：LLM judge 分布移位退化的审计
-
 
 ---
 
