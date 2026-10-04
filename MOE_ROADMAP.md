@@ -32,7 +32,7 @@
    （DMoE 的 Surgical History Pruning 指出）。本项目采用 append-only 兼容的**折叠**方案：
    不删除历史，追加一条"能力已就绪"的折叠记录（带时间戳与来源），让后续轮次读到更新后的
    状态。接口：`ExternalMemory.append_fold(old_ref, new_fact)`
-2. **外挂粒度审计**（thin and narrow 原则）：当前思考外挂是三合一（采样/早停/预算守卫）——
+2. **外挂粒度审计**（thin and narrow 原则）：当前采样外挂是三合一（采样/早停/预算守卫）——
    按 fine-grained 原则评估是否拆成三个独立专家模块（受益：路由更锐利、缓存前缀更稳定；
    代价：注册表与编排复杂度上升）。产出一页评估报告
 3. **cachecortex 集成**：experts.py 进包导出（`from cachecortex import ExpertRegistry`）

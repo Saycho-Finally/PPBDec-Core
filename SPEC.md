@@ -1,7 +1,7 @@
 # PPBDec-Core ｜ 决策外挂 Spec v0.1（2026-10-03）
 
 > 定位：**不是第九个独立外挂，是所有外挂共享的判定/选择子层**。
-> 每个外挂内部本来就有决策组件（学习外挂的内容门与路由、思考外挂的早停与 selection、
+> 每个外挂内部本来就有决策组件（知识外挂的内容门与路由、采样外挂的早停与 selection、
 > 缓存外挂的探测与预算），本模块把它们抽成一个统一的决策核（DecisionCore）。
 
 ---
@@ -91,5 +91,5 @@ DecisionCore 的 `enumeration` 决策点消费**专家注册表**（ExpertRegist
 | 外挂 | 决策点 | 迁移路径 |
 |---|---|---|
 | PPBExt-Knowledge | 内容门三规则（verifiable）→ 技能路由（enumeration） | 内容门谓词注册为 verifier |
-| 思考外挂 | 早停（verifiable：票型收敛）→ selection（open+coverage）→ 档位（enumeration） | 已有 coverage/selection 分解，直接对接 |
+| 采样外挂 | 早停（verifiable：票型收敛）→ selection（open+coverage）→ 档位（enumeration） | 已有 coverage/selection 分解，直接对接 |
 | PPBExt-Cache | provider 层判定（verifiable：usage 字段探测）→ 杠杆选择（enumeration） | CacheTiers 结果注册为 rule_engine |

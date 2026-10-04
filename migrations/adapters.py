@@ -20,7 +20,7 @@ from collections import Counter
 _HERE = os.path.dirname(__file__)
 _ROOT = os.path.abspath(os.path.join(_HERE, "..", ".."))
 
-sys.path.insert(0, _ROOT)                          # exocortex（思考外挂）
+sys.path.insert(0, _ROOT)                          # exocortex（采样外挂）
 sys.path.insert(0, os.path.join(_ROOT, "..", "addenda-decide"))  # decisioncore
 sys.path.insert(0, os.path.join(_ROOT, "..", "仓库2", "cachecortex"))  # 缓存外挂
 sys.path.insert(0, os.environ.get("ADDENDA_LM_EXPERIMENTS", "../../addenda-lm/experiments"))
@@ -40,7 +40,7 @@ except ImportError:
     safe_eval_expr = None
     CountdownTask = None
 
-# ---- 迁移点 1：思考外挂 · 早停判定（verifiable）----
+# ---- 迁移点 1：采样外挂 · 早停判定（verifiable）----
 
 STOP_K = 3
 
@@ -78,7 +78,7 @@ def cache_tier_point() -> DecisionPoint:
                   "decision_kind": "provider 能力判定（verifiable：usage 字段即谓词）"})
 
 
-# ---- 迁移点 3：学习外挂 · 内容门日期规则（verifiable）----
+# ---- 迁移点 3：知识外挂 · 内容门日期规则（verifiable）----
 
 try:
     sys.path.insert(0, os.path.join(_ROOT, "..", "仓库"))
@@ -100,7 +100,7 @@ def content_gate_date_point(claim: dict) -> DecisionPoint | None:
                   "decision_kind": "内容门准入判定（verifiable：日期规则确定性）"})
 
 
-# ---- 迁移点 4：思考外挂 · selection 投票（open + coverage）----
+# ---- 迁移点 4：采样外挂 · selection 投票（open + coverage）----
 
 def selection_point(candidates: list[str], vote_keys: list[str],
                     source: str = "sample(low, n=4, stop=3)") -> tuple[DecisionPoint, list[str]]:
