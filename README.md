@@ -27,6 +27,9 @@
 | `open` | 上游采样构造的候选集 | **必须附 coverage 证据**；默认判定器为 fusion | 答案 selection、评审挑选 |
 | `route` | 专家注册表上的能力匹配 | capability 契约匹配（deterministic 优先） | MoE 路由、外挂选择 |
 
+治理层（`governance`）：外挂装载前的冲突检测（互斥资源 / 缺依赖 / 版本）与权限边界预检。
+可观测性（`observability`）：token 速率预警 / 循环耗尽检测 / 工具错误率 / 路由健康。
+
 ## 判定器光谱
 
 ```
@@ -88,13 +91,15 @@ rec, winner = dc.decide_open(
 ## 仓库结构
 
 ```
-decisioncore/    核心库（core 类型学 / solvers 光谱 / registry 专家表 / route 路由决策）
+decisioncore/    核心库（core 类型学 / solvers 光谱 / registry 专家表 / route 路由决策
+                 / governance 治理层 / observability 认知可观测性）
 migrations/      三外挂运行时切换适配器（黑盒注入原判定函数，逻辑零重写）
-tests/           32 项测试全过（核心七测 + v2 十测 + 迁移等价性十五测 + runtime 五测）
+tests/           49 项测试全过（核心七测 + v2 十测 + 迁移等价性十五测 + runtime 五测 + MoE 十二测）
 results/         E2 实测数据（采样候选 / fusion 对照 JSON）
 e2_task_family_a.py  任务族 A：5 段含已知 bug 的代码 + 15 个执行级验证的 gold bug
 SPEC.md          完整设计文档（类型学 / 光谱 / 审计 / 理论约束）
-E2_正式实验设计_v2.md  实验设计与文献锚点
+MOE_ROADMAP.md   四层架构的路线与优化计划
+E2_experiment_design_v2.md  实验设计与文献锚点
 ```
 
 ## 测试状态

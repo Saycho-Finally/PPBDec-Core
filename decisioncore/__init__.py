@@ -29,6 +29,8 @@ from decisioncore.core import (CoverageEvidence, DecisionPoint, DecisionRecord,
                                DecisionType, RouteDecision)
 from decisioncore.solvers import DecisionCore, llm_judge_stub
 from decisioncore.registry import ExpertRegistry, ExpertSpec
+from decisioncore.governance import AddonManifest, Conflict, Governance
+from decisioncore.observability import CognitiveMonitor
 
 __version__ = "0.1.0"
 
@@ -36,5 +38,6 @@ __all__ = [
     "DecisionCore", "DecisionPoint", "DecisionType", "DecisionRecord",
     "CoverageEvidence", "RouteDecision",
     "ExpertRegistry", "ExpertSpec", "llm_judge_stub",
+    "Governance", "AddonManifest", "Conflict", "CognitiveMonitor",
     "__version__",
 ]
