@@ -54,7 +54,7 @@ def test_governance():
                        depends_on={"nonexistent"})       # 缺依赖
 
     c1 = g.register(m1)
-    check("首个外挂无冲突", c1 == [])
+    check("首个项目无冲突", c1 == [])
     c2 = g.register(m2)
     check("互斥资源冲突检出", len(c2) == 1 and c2[0].kind == "exclusive_clash",
           c2[0].detail if c2 else "")
@@ -66,11 +66,11 @@ def test_governance():
     m4 = AddonManifest(name="oss", version="0.1", touches={"prefix"},
                        exclusive={"history.front"})
     ok, found = g.can_load(m4)
-    check("预检拒绝互斥外挂（不注册）", ok is False and len(found) >= 1 and
+    check("预检拒绝互斥项目（不注册）", ok is False and len(found) >= 1 and
           "oss" not in g.manifests, f"{len(found)} 处冲突")
     m5 = AddonManifest(name="safe", version="0.1", touches={"output"})
     ok2, found2 = g.can_load(m5)
-    check("预检放行无冲突外挂", ok2 is True and found2 == [])
+    check("预检放行无冲突项目", ok2 is True and found2 == [])
 
 
 if __name__ == "__main__":

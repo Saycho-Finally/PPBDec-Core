@@ -1,8 +1,8 @@
-# PPBDec-Core ｜ 决策外挂 Spec v0.1（2026-10-03）
+# PPBDec-Core ｜ PPBDec-Core Spec v0.1（2026-10-03）
 
-> 定位：**不是第九个独立外挂，是所有外挂共享的判定/选择子层**。
-> 每个外挂内部本来就有决策组件（知识外挂的内容门与路由、采样外挂的早停与 selection、
-> 缓存外挂的探测与预算），本模块把它们抽成一个统一的决策核（DecisionCore）。
+> 定位：**不是第九个独立项目，是所有项目共享的判定/选择子层**。
+> 每个项目内部本来就有决策组件（知识注入的内容门与路由、采样策略的早停与 selection、
+> 能力探测与预算），本模块把它们抽成一个统一的决策核（DecisionCore）。
 
 ---
 
@@ -86,10 +86,10 @@ DecisionCore 的 `enumeration` 决策点消费**专家注册表**（ExpertRegist
 - tests：六项单测（类型路由 / coverage 守门 / 审计不可变性 / registry 查询 / 熵统计 / 早停对接）
 - 依赖：核心零依赖（与 CacheCortex 同纪律）
 
-## 七、与三外挂的对接计划
+## 七、与三项目的对接计划
 
-| 外挂 | 决策点 | 迁移路径 |
+| 项目 | 决策点 | 迁移路径 |
 |---|---|---|
-| PPBExt-Knowledge | 内容门三规则（verifiable）→ 技能路由（enumeration） | 内容门谓词注册为 verifier |
-| 采样外挂 | 早停（verifiable：票型收敛）→ selection（open+coverage）→ 档位（enumeration） | 已有 coverage/selection 分解，直接对接 |
-| PPBExt-Cache | provider 层判定（verifiable：usage 字段探测）→ 杠杆选择（enumeration） | CacheTiers 结果注册为 rule_engine |
+| 知识注入 | 内容门三规则（verifiable）→ 技能路由（enumeration） | 内容门谓词注册为 verifier |
+| 采样策略 | 早停（verifiable：票型收敛）→ selection（open+coverage）→ 档位（enumeration） | 已有 coverage/selection 分解，直接对接 |
+| 前缀缓存 | provider 层判定（verifiable：usage 字段探测）→ 杠杆选择（enumeration） | 能力探测结果注册为 rule_engine |

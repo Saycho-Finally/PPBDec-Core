@@ -1,11 +1,11 @@
-# PPBDec-Core ｜ 补遗：LLM 应用的统一判定/选择子层 · 判定器光谱与证据链审计
+# PPBDec-Core
 
 **一句话**：LLM 应用里到处都是决策（门、路由、早停、选择、预算），但它们散装在各自的项目里。
 本模块把它们抽成一个**统一的决策核**：决策点按类型声明，判定器沿确定性光谱路由，
 每次决策落一条不可变的证据链——并且**开放决策的默认判定器是"合并"而不是"挑选"**
 （fusion F1 0.716 vs 最好单候选，实测见下）。
 
-> 作者：Saycho-Finally（独立研究者） ｜ AI 使用声明见 [AI_DISCLOSURE.md](AI_DISCLOSURE.md) ｜ License: MIT ｜ 核心零依赖 ｜ Python ≥3.10（路由增强依赖 PPB-MoE）
+> 作者：Saycho-Finally（独立研究者） ｜ AI 使用声明见 [AI_DISCLOSURE.md](AI_DISCLOSURE.md) ｜ License: MIT ｜ 核心零依赖 ｜ Python ≥3.10
 
 ---
 
@@ -25,9 +25,9 @@
 | `verifiable` | 谓词判定（开放空间，无候选集） | 程序验证器（确定性，零成本） | 数值验证、schema 检查、票型收敛 |
 | `enumeration` | 封闭枚举选择（完备性由协议保证） | 规则 → 探针 → 微模型 | 模型路由、工具选择 |
 | `open` | 上游采样构造的候选集 | **必须附 coverage 证据**；默认判定器为 fusion | 答案 selection、评审挑选 |
-| `route` | 专家注册表上的能力匹配 | capability 契约匹配（deterministic 优先） | MoE 路由、外挂选择 |
+| `route` | 专家注册表上的能力匹配 | capability 契约匹配（deterministic 优先） | MoE 路由、项目选择 |
 
-治理层（`governance`）：外挂装载前的冲突检测（互斥资源 / 缺依赖 / 版本）与权限边界预检。
+治理层（`governance`）：项目装载前的冲突检测（互斥资源 / 缺依赖 / 版本）与权限边界预检。
 可观测性（`observability`）：token 速率预警 / 循环耗尽检测 / 工具错误率 / 路由健康。
 
 ## 判定器光谱
@@ -93,7 +93,7 @@ rec, winner = dc.decide_open(
 ```
 decisioncore/    核心库（core 类型学 / solvers 光谱 / registry 专家表 / route 路由决策
                  / governance 治理层 / observability 认知可观测性）
-migrations/      三外挂运行时切换适配器（黑盒注入原判定函数，逻辑零重写）
+migrations/      三项目运行时切换适配器（黑盒注入原判定函数，逻辑零重写）
 tests/           49 项测试全过（核心七测 + v2 十测 + 迁移等价性十五测 + runtime 五测 + MoE 十二测）
 results/         E2 实测数据（采样候选 / fusion 对照 JSON）
 e2_task_family_a.py  任务族 A：5 段含已知 bug 的代码 + 15 个执行级验证的 gold bug
@@ -113,7 +113,7 @@ E2_experiment_design_v2.md  实验设计与文献锚点
 
 - 核心七测：类型路由 / coverage 守门 / 审计不可变性 / registry 熵与饿死 / 末档标注
 - v0.2 十测：route 决策 / 运行时灰度开关等价性
-- 三外挂迁移等价性 15/15：思考早停 / CacheTier / 内容门 R1 / selection 投票
+- 三项目迁移等价性 15/15：思考早停 / CacheTier / 内容门 R1 / selection 投票
   （黑盒注入原判定函数，同输入同输出）
 - runtime 切换 5/5：CacheTier 与内容门 R1 的运行时路径
 

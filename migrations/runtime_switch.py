@@ -1,4 +1,4 @@
-"""采样外挂运行时灰度开关：早停与 selection 走 DecisionCore（含审计）。
+"""PPBExt-Sample运行时灰度开关：早停与 selection 走 DecisionCore（含审计）。
 
 用法（e1_formal.py 已接 --decision-core）：
     from migrations.runtime_switch import DecisionAwareStop
