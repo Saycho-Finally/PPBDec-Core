@@ -119,3 +119,13 @@ E2_experiment_design_v2.md  实验设计与文献锚点
 - GSA（arXiv 2503.04104）：open-ended 任务上 self-consistency 不适用而生成式聚合有效
 - BERT-as-a-Judge / INSPECTOR：小判定器匹敌大模型的实证
 - "A Coin Flip for Safety"（arXiv 2603.06594）：LLM judge 分布移位退化的审计
+
+
+---
+
+## 贡献与引用
+
+- 贡献指南见 [CONTRIBUTING.md](CONTRIBUTING.md)；行为准则见 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- 安全问题请走 [SECURITY.md](SECURITY.md) 的私密渠道（勿开公开 Issue）
+- 版本变更见 [CHANGELOG.md](CHANGELOG.md)；学术引用格式见 [CITATION.cff](CITATION.cff)
+- 许可：MIT
