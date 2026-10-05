@@ -1,16 +1,18 @@
-# PPBDec-Core ｜ PPBDec-Core Spec v0.1（2026-10-03）
+# PPBDec-Core Spec v0.3（2026-10-05）
 
-> 定位：**不是第九个独立项目，是所有项目共享的判定/选择子层**。
-> 每个项目内部本来就有决策组件（知识注入的内容门与路由、采样策略的早停与 selection、
-> 能力探测与预算），本模块把它们抽成一个统一的决策核（DecisionCore）。
+> 定位：**共享的判定/选择子层**——上层组件内部本来各自带着决策逻辑
+> （知识注入的内容门与路由、采样策略的早停与 selection、能力探测与预算），
+> 本模块把它们抽成一个统一的决策核（DecisionCore）。
 
 ---
 
 ## 一、理论约束（从实测批判继承，非协商项）
 
 ### 批判一：决策模型只做 selection，天花板被 coverage 封死
+
 决策 = 选项集构造（难，开放世界）+ 选项内选择（易，封闭世界）。
 决策模型只做后者。两种病态：
+
 - **病态一（伪决策）**：候选集只有一个真答案——不需要选择，需要计算或查找
 - **病态二（coverage 缺失）**：正确答案不在候选集里——选择器再准也是零
 
@@ -18,6 +20,7 @@
 开放选择必须先经过上游采样/检索（由调用方声明 coverage 证据）。
 
 ### 批判二：判定器可靠性分场景
+
 - 分布内：小模型/内部表示/程序验证器匹敌大模型（BERT-210M GSM8K 98.8%；INSPECTOR 内部探针 80-90%）
 - 分布移位：LLM judge 退化到近随机（arXiv 2603.06594，6642 人工标注）
 
@@ -70,21 +73,34 @@ program_verifier（确定性，$0）
 字段语义：`candidates_source`（候选从哪来——coverage 审计）、`solver`（用了哪档判定器）、
 `alternatives`（未被选中的选项——事后归因）、`outcome_check`（若事后可验证，回填对错）。
 
-## 五、与 MoE 项目的接口
+## 五、与编排层的接口
 
 DecisionCore 的 `enumeration` 决策点消费**专家注册表**（ExpertRegistry）：
+
 - 注册表提供 capability 契约（ExpertSpec：capabilities/cost_tier/tools）——路由有具体物可推理
-- 注册表维护路由分布统计（熵/利用率/饿死检测）——MoE 的负载均衡输入
+- 注册表维护路由分布统计（熵/利用率/饿死检测）——编排层的负载均衡输入
 - RouteDecision 带置信度；低置信改变控制流（多专家并行 / 升级路由 / 拆任务）
 
-## 六、实现范围（v0.1）
+专家注册表由本仓库的 `decisioncore/registry.py` 提供协议与默认实现；编排运行时不在
+本仓库范围内（见第六节）。
+
+## 六、实现范围（v0.3）
+
+**在本仓库内：**
 
 - `decisioncore/core.py`：DecisionPoint / DecisionRecord / 决策器协议
 - `decisioncore/solvers.py`：光谱实现（program_verifier / rule_engine / majority_vote / llm_judge 桩）
 - `decisioncore/registry.py`：ExpertRegistry 协议 + 默认实现
-- `decisioncore/audit.py`：DecisionRecord 落盘（JSONL append-only）
-- tests：六项单测（类型路由 / coverage 守门 / 审计不可变性 / registry 查询 / 熵统计 / 早停对接）
-- 依赖：核心零依赖（与 CacheCortex 同纪律）
+- `decisioncore/route.py`：route 决策（能力契约匹配 + 路由分布快照）
+- `migrations/`：迁移适配器（原判定函数原样注入，逻辑零重写）
+- 审计：DecisionRecord 以 JSONL append-only 落盘，由 DecisionCore 内部提交
+- 依赖：核心零依赖
+
+**不在本仓库内（0.3.0 起移出）：**
+
+- 编排运行时（专家池执行、负载均衡回灌）
+- 装载前治理预检（互斥资源/依赖/版本）
+- 认知可观测性（token 速率/循环耗尽/工具错误率/路由健康）
 
 ## 七、与三项目的对接计划
 

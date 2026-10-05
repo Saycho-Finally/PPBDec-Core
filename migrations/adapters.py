@@ -16,14 +16,18 @@ import os
 import sys
 from collections import Counter
 
-# ---- 路径：接入三项目的原实现 ----
+# ---- 路径：本仓库根 + 被迁移组件的原实现（兄弟仓库，可用环境变量覆盖）----
 _HERE = os.path.dirname(__file__)
 _ROOT = os.path.abspath(os.path.join(_HERE, "..", ".."))
 
-sys.path.insert(0, _ROOT)                          # exocortex（PPBExt-Sample）
-sys.path.insert(0, os.path.join(_ROOT, "..", "addenda-decide"))  # decisioncore
-sys.path.insert(0, os.path.join(_ROOT, "..", "仓库2", "cachecortex"))  # PPBExt-Cache
-sys.path.insert(0, os.environ.get("ADDENDA_LM_EXPERIMENTS", "../../addenda-lm/experiments"))
+sys.path.insert(0, os.path.dirname(_HERE))                     # 本仓库根（decisioncore）
+sys.path.insert(0, os.environ.get(
+    "PPB_SAMPLE_ROOT", os.path.join(_ROOT, "PPBExt-Sample")))  # exocortex 包
+sys.path.insert(0, os.environ.get(
+    "PPB_CACHE_ROOT", os.path.join(_ROOT, "PPBExt-Cache")))    # cachecortex 包
+sys.path.insert(0, os.environ.get(
+    "PPB_KNOWLEDGE_EXPERIMENTS",
+    os.path.join(_ROOT, "PPBExt-Knowledge", "experiments")))   # curator 模块
 
 from decisioncore import (DecisionCore, DecisionPoint,  # noqa: E402
                           DecisionType, CoverageEvidence)
@@ -81,7 +85,6 @@ def cache_tier_point() -> DecisionPoint:
 # ---- 迁移点 3：PPBExt-Knowledge · 内容门日期规则（verifiable）----
 
 try:
-    sys.path.insert(0, os.path.join(_ROOT, "..", "仓库"))
     import curator as _curator  # noqa: E402
     date_valid = _curator.date_valid
 except ImportError:
