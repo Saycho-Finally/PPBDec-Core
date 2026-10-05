@@ -35,8 +35,19 @@
 | `enumeration` | 候选集有完备性保证的枚举选择 | 候选集由代码/协议枚举（工具集、标签集、档位表） | 规则 → 探针 → 微模型（按预算升档） | 模型路由、工具选择、档位选择 |
 | `open` | 候选集由上游采样构造 | **调用方必须附 coverage 证据**（采样次数/来源多样性/历史覆盖率） | 投票 → 探针 → LLM（末档，带移位警告） | 答案 selection、RAG chunk 挑选 |
 
-**路由规则**：verifiable 一票优先（有谓词绝不投票）；enumeration 按 cost_tier 升档；
-open 必须 coverage 证据齐全才受理，且 LLM judge 的结果永远带 `shift_risk: high` 标注。
+**路由规则**：verifiable 一票优先（有谓词绝不投票）；enumeration 按 cost_tier 升档。
+open 的 coverage 按三态处理：
+
+| coverage 状态 | 处理 |
+|---|---|
+| 缺失 / 候选为空 | **拒绝受理**（抛 ValueError；病态二守门） |
+| 存在但不足（候选数低于下限，或缺来源说明） | **降级受理**：结果保留，但置信度折半、`shift_risk` 强制 high、记录标 `degraded` |
+| 充分 | 正常受理；历史覆盖率 > 0.8 时 `shift_risk` 可降为 low |
+
+降级的意义：弱证据并非不可用，但**不能被当成充分证据**。降级标记随 `DecisionRecord`
+进入审计链，事后归因时可区分"当时就是弱证据"与"当时证据充分但选错了"。
+
+LLM judge 的结果永远带 `shift_risk: high` 标注。
 
 ## 三、决策器光谱（从确定性到生成式）
 

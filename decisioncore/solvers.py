@@ -10,8 +10,8 @@ from __future__ import annotations
 import json
 from collections import Counter
 
-from decisioncore.core import (CoverageEvidence, DecisionPoint, DecisionRecord,
-                               DecisionType)
+from decisioncore.core import (MIN_CANDIDATES, CoverageEvidence, DecisionPoint,
+                               DecisionRecord, DecisionType)
 
 
 def solve_verifiable(point: DecisionPoint, subject) -> DecisionRecord:
@@ -50,34 +50,53 @@ def solve_enumeration(point: DecisionPoint) -> DecisionRecord:
     )
 
 
-def solve_open_majority(point: DecisionPoint, vote_keys: list[str]) -> tuple[DecisionRecord, str | None]:
+def solve_open_majority(point: DecisionPoint, vote_keys: list[str],
+                        min_candidates: int = MIN_CANDIDATES
+                        ) -> tuple[DecisionRecord, str | None]:
     """open 决策的多数投票判定（self-consistency 式）。
     vote_keys：每个候选的投票键（如 Countdown 数值）；None 项为废票。
-    前置：coverage 证据必须齐全且 n_candidates>0，否则抛 ValueError。"""
+
+    前置：coverage 证据必须存在且 n_candidates>0，否则抛 ValueError（拒绝受理）。
+    **覆盖不足**（候选数低于下限）：降级受理——结果保留，但
+    置信度折半、shift_risk 强制 high、记录标注 degraded，
+    避免把弱证据当充分证据用。
+    """
     if point.coverage is None:
         raise ValueError("open 决策缺少 coverage 证据——DecisionCore 拒绝受理（病态二守门）")
     if point.coverage.n_candidates == 0:
         raise ValueError("open 决策候选为空")
+    sufficient, why = point.coverage.sufficiency(min_candidates)
+    degraded = not sufficient
+
     keys = [k for k in vote_keys if k]
     if not keys:
         rec = _open_record(point, solver="majority_vote", result=None,
-                           confidence=0.0, alternatives=[])
+                           confidence=0.0, alternatives=[], degraded=degraded,
+                           extra_note=f"coverage 不足（{why}）：降级受理" if degraded else "")
         return rec, None
     counter = Counter(keys)
     top, cnt = counter.most_common(1)[0]
     tie = list(counter.values()).count(cnt) > 1
     conf = cnt / len(keys) if not tie else 0.0
+    if degraded:
+        conf = conf / 2                      # 降级：置信度折半
     winner = None if tie else top
-    shift = "low" if point.coverage.history_coverage_rate and \
-        point.coverage.history_coverage_rate > 0.8 else "high"
+    shift = "low" if (not degraded and point.coverage.history_coverage_rate
+                      and point.coverage.history_coverage_rate > 0.8) else "high"
     rec = _open_record(point, solver="majority_vote(value_key)", result=winner,
                        confidence=round(conf, 4), alternatives=dict(counter),
-                       shift_risk=shift)
+                       shift_risk=shift, degraded=degraded,
+                       extra_note=f"coverage 不足（{why}）：降级受理，置信度折半"
+                       if degraded else "")
     return rec, winner
 
 
 def _open_record(point, solver, result, confidence, alternatives,
-                 shift_risk: str = "high") -> DecisionRecord:
+                 shift_risk: str = "high", degraded: bool = False,
+                 extra_note: str = "") -> DecisionRecord:
+    notes = "open selection; candidate set constructed upstream"
+    if extra_note:
+        notes += f" | {extra_note}"
     return DecisionRecord(
         decision_id="", ts=0.0, point_name=point.name,
         point_type=DecisionType.OPEN.value, solver=solver, result=result,
@@ -86,8 +105,9 @@ def _open_record(point, solver, result, confidence, alternatives,
                            "source": point.coverage.source,
                            "source_diversity": point.coverage.source_diversity,
                            "history_coverage_rate": point.coverage.history_coverage_rate},
-        shift_risk=shift_risk,  # 默认 high；历史覆盖率 >0.8 时降为 low
-        notes="open selection; candidate set constructed upstream",
+        shift_risk=shift_risk,  # 默认 high；历史覆盖率 >0.8 且覆盖充分时降为 low
+        degraded=degraded,
+        notes=notes,
     )
 
 
@@ -122,8 +142,11 @@ class DecisionCore:
         self._commit(rec)
         return rec
 
-    def decide_open(self, point: DecisionPoint, vote_keys: list[str]) -> tuple[DecisionRecord, str | None]:
-        rec, winner = solve_open_majority(point, vote_keys)
+    def decide_open(self, point: DecisionPoint, vote_keys: list[str],
+                    min_candidates: int = MIN_CANDIDATES
+                    ) -> tuple[DecisionRecord, str | None]:
+        """coverage 缺失或候选为空 → 抛错拒绝；覆盖不足 → 降级受理（记录标 degraded）。"""
+        rec, winner = solve_open_majority(point, vote_keys, min_candidates)
         self._commit(rec)
         return rec, winner
 

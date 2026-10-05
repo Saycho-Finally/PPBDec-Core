@@ -23,13 +23,26 @@ class DecisionType(str, Enum):
     OPEN = "open"               # 上游采样构造的候选集（需 coverage 证据）
 
 
+# open 决策的候选数下限：低于此值视为"覆盖不足"——不拒绝，但降级受理并在记录中标注
+MIN_CANDIDATES = 2
+
+
 @dataclass
 class CoverageEvidence:
-    """open 决策的 coverage 证据。缺失或不足 → 拒绝受理。"""
+    """open 决策的 coverage 证据。缺失或候选为空 → 拒绝受理；
+    存在但不足 → **降级受理**（结果保留，标注 degraded）。"""
     n_candidates: int
     source: str                      # 候选来源描述（如 "sample(low, n=4, stop=3)"）
     source_diversity: str = ""       # 采样多样性说明（temperature 等）
     history_coverage_rate: float | None = None  # 同类决策点的历史覆盖率（若有）
+
+    def sufficiency(self, min_candidates: int = MIN_CANDIDATES) -> tuple[bool, str]:
+        """覆盖是否充分。返回 (是否充分, 原因)。"""
+        if self.n_candidates < min_candidates:
+            return False, f"候选数 {self.n_candidates} < 下限 {min_candidates}"
+        if not self.source.strip():
+            return False, "缺少候选来源说明"
+        return True, ""
 
 
 @dataclass
@@ -62,6 +75,7 @@ class DecisionRecord:
     alternatives: list[Any]
     coverage_evidence: dict | None
     shift_risk: str           # none / low / high
+    degraded: bool = False    # coverage 不足时降级受理的标记
     notes: str = ""
 
     def to_json(self) -> str:

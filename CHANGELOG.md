@@ -5,6 +5,24 @@
 
 ## [Unreleased]
 
+## [Unreleased]
+
+## [0.4.0] - 2026-10-05
+
+### Added
+
+- **coverage 降级路径**：open 决策的覆盖证据**存在但不足**（候选数低于下限，
+  或缺少候选来源说明）时不再一律拒绝，而是降级受理——结果保留，但置信度折半、
+  `shift_risk` 强制为 high、`DecisionRecord` 标注 `degraded`
+- `CoverageEvidence.sufficiency()` 与常量 `MIN_CANDIDATES`（默认 2）
+- `tests/test_coverage_degrade.py`：19 项测试
+
+### Changed
+
+- `DecisionRecord` 新增 `degraded` 字段（审计链可见降级）
+- `decide_open` / `solve_open_majority` 新增 `min_candidates` 参数（默认 2）
+- **拒绝路径不变**：coverage 缺失或候选为空仍抛 ValueError
+
 ## [0.3.0] - 2026-10-05
 
 范围收敛：本仓库只承载决策层，编排层交由独立层级承载。

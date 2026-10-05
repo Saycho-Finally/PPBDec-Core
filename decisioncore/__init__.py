@@ -25,16 +25,16 @@
         vote_keys=vote_keys)
 """
 
-from decisioncore.core import (CoverageEvidence, DecisionPoint, DecisionRecord,
-                               DecisionType, RouteDecision)
+from decisioncore.core import (MIN_CANDIDATES, CoverageEvidence, DecisionPoint,
+                               DecisionRecord, DecisionType, RouteDecision)
 from decisioncore.solvers import DecisionCore, llm_judge_stub
 from decisioncore.registry import ExpertRegistry, ExpertSpec
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = [
     "DecisionCore", "DecisionPoint", "DecisionType", "DecisionRecord",
-    "CoverageEvidence", "RouteDecision",
+    "CoverageEvidence", "RouteDecision", "MIN_CANDIDATES",
     "ExpertRegistry", "ExpertSpec", "llm_judge_stub",
     "__version__",
 ]
