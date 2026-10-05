@@ -13,6 +13,10 @@
 
 - `tests/test_migration_equivalence.py`：迁移等价性 15 项可复现用例
   （早停 4 / 缓存层 3 / 内容门日期 4 / selection 2 / 覆盖守门 2）
+- `migrations/` 补包声明（`__init__.py`），使 `from migrations.*` 的导入关系显式化
+- 恢复 E2 的证据链审计产出（`results/e2_decisions.jsonl`、
+  `results/e2_llm_fusion_audit.jsonl`）——这两个文件由 `e2_run.py` 与
+  `e2_llm_fusion.py` 写出，此前的仓库组装未包含它们
 
 ### Changed
 
