@@ -95,6 +95,7 @@ tests/           35 项测试全过（核心七测 + 路由切换十测 + 运行
 results/         E2 实测数据与证据链审计产出（JSON / JSONL）
 reports/         DecisionCore 验证实验报告（迁移等价性 / 开放决策实证）
 e2_task_family_a.py  任务族 A：5 段含已知 bug 的代码 + 15 个执行级验证的 gold bug
+validate_task_family.py  任务族真实性校验（gold bug 的"构造即验证"复现检查）
 SPEC.md          完整设计文档（类型学 / 光谱 / 审计 / 理论约束）
 E2_experiment_design_v2.md  实验设计与文献锚点
 ```
@@ -109,6 +110,8 @@ E2_experiment_design_v2.md  实验设计与文献锚点
 - 判定器光谱的 probe 与 micro 两档当前为接口占位，未实现具体模型
 - E2 的答案一致率口径为粗提取（正则），绝对数值被系统性低估（结论方向不受影响）
 - `tests/test_runtime_cache_lm.py` 的内容门用例依赖外部组件，缺失时记为跳过，不计入通过数
+- `results/e2_task_a_results.json` 的 `scores` 段为第一轮退化口径（五个判定器的 F1 完全相同，
+  系该轮解析缺陷所致），仅应作为候选来源使用；有效对照见 `results/e2_llm_fusion_results.json`
 
 ## 实验依据
 

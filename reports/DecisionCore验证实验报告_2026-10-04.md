@@ -61,15 +61,22 @@ DecisionPoint 的谓词——不重写逻辑，用"同输入同输出"验证接�
 - fusion 档的实现依赖外部模型调用（LLM 合并）；离线部分（机械合并）为纯确定性
 - 迁移等价性的"等价"由黑盒注入的构造方式保证（原判定函数被原样注入），
   因此该实验验证的是**接口替换未改变行为**，而非判定逻辑本身的正确性
+- `results/e2_task_a_results.json` 的 `scores` 段为**第一轮退化口径**：五个判定器的
+  指标完全相同（F1 均 0.857、recall 均 1.0、precision 均 0.75）。正常的五档对照不可能
+  齐平，该结果系第一轮解析缺陷所致，**不能当作有效的五档对照引用**。
+  本报告的三档对照数字取自第二轮（`results/e2_llm_fusion_results.json`）；
+  该文件在本报告中**仅用作候选来源**（30 个采样候选）
 
 ## 五、数据与复现
 
 | 数据 | 路径 |
 |---|---|
-| 采样候选与判定器评分 | `results/e2_task_a_results.json` |
+| 采样候选（30 个） | `results/e2_task_a_results.json`（仅取 `reviews`；其 `scores` 为退化口径，见第四节） |
 | 离线合并对照 | `results/e2_fusion_offline.json` |
 | LLM 合并结果 | `results/e2_llm_fusion_results.json` |
+| 证据链审计产出 | `results/e2_decisions.jsonl`（`e2_run.py` 写出）与 `results/e2_llm_fusion_audit.jsonl`（`e2_llm_fusion.py` 写出） |
 | 实验设计 | `E2_experiment_design_v2.md` |
+| 任务族真实性校验 | `validate_task_family.py`（gold bug 的"构造即验证"复现检查） |
 | 复现脚本（实验 1） | `tests/test_migration_equivalence.py`；适配器在 `migrations/adapters.py` |
 | 复现脚本（实验 2） | `e2_run.py` / `e2_llm_fusion.py` / `e2_fusion_offline.py` |
 | 任务数据 | `e2_task_family_a.py`（含 15 个注入缺陷的清单与执行级验证） |

@@ -24,6 +24,16 @@
   （`PPB_SAMPLE_ROOT` / `PPB_CACHE_ROOT` / `PPB_KNOWLEDGE_EXPERIMENTS`）
 - 迁移适配器补上本仓库根的路径注入，使其可独立导入运行
 - README / SPEC 的测试口径改为可复现的实际数字
+- README 补登记 `validate_task_family.py`（此前未列入仓库结构）
+- README 与实验报告补充第一轮 `results/e2_task_a_results.json` 的退化口径说明
+  （其 `scores` 段五个判定器指标完全相同，不可当作有效对照引用）
+
+### Removed
+
+- `e2_rerun.py`：中间产物，已被 `e2_llm_fusion.py` 取代（报告引用的三档对照数字出自后者）。
+  该脚本另有三处缺陷：fusion 调用漏传适配器参数、judge 调用未关思考且预算仅 200、
+  审计对象创建后未使用致其声明的产出无法生成。全仓库零引用，其两个声明产出
+  （`e2_final_comparison.json`、`e2_decisions_v2.jsonl`）不存在且无人引用
 
 ### Removed
 
