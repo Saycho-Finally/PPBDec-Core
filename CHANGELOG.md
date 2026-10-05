@@ -18,6 +18,12 @@
   `results/e2_llm_fusion_audit.jsonl`）——这两个文件由 `e2_run.py` 与
   `e2_llm_fusion.py` 写出，此前的仓库组装未包含它们
 
+### Fixed
+
+- 迁移适配器与运行时接入的环境变量默认路径失效（历史品牌前缀 + 已改名的旧目录名），
+  统一为 `PPB_SAMPLE_ROOT` / `PPB_CACHE_ROOT` / `PPB_KNOWLEDGE_EXPERIMENTS`
+- 路径修好后，运行时测试中此前跳过的内容门用例恢复执行，测试总数由 35 升至 **37**
+
 ### Changed
 
 - 迁移适配器的源实现路径改为按当前仓库名解析，并支持环境变量覆盖

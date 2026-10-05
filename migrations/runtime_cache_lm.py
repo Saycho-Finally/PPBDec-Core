@@ -11,8 +11,10 @@ import sys
 _HERE = os.path.dirname(__file__)
 _ROOT = os.path.abspath(os.path.join(_HERE, "..", ".."))
 sys.path.insert(0, _ROOT)
-sys.path.insert(0, os.environ.get("ADDENDA_CACHE_ROOT", "../../addenda-cache/cachecortex"))
-sys.path.insert(0, os.environ.get("ADDENDA_LM_EXPERIMENTS", "../../addenda-lm/experiments"))
+sys.path.insert(0, os.environ.get("PPB_CACHE_ROOT", os.path.join(_ROOT, "PPBExt-Cache")))
+sys.path.insert(0, os.environ.get(
+    "PPB_KNOWLEDGE_EXPERIMENTS",
+    os.path.join(_ROOT, "PPBExt-Knowledge", "experiments")))
 
 from decisioncore import DecisionCore, DecisionPoint, DecisionType  # noqa: E402
 
@@ -48,7 +50,9 @@ class ContentGateDC:
         self.dc = dc
         self._date_valid = None
         try:
-            sys.path.insert(0, os.environ.get("ADDENDA_LM_EXPERIMENTS", "../../addenda-lm/experiments"))
+            sys.path.insert(0, os.environ.get(
+                "PPB_KNOWLEDGE_EXPERIMENTS",
+                os.path.join(_ROOT, "PPBExt-Knowledge", "experiments")))
             import curator as _curator  # noqa: E402
             self._date_valid = _curator.date_valid
             self._curate = _curator.curate
@@ -62,7 +66,7 @@ class ContentGateDC:
         point = DecisionPoint(
             name=f"contentgate.{gate}.r1_date", type=DecisionType.VERIFIABLE,
             predicate=self._date_valid,
-            metadata={"migrated_from": "addenda-lm curator R1",
+            metadata={"migrated_from": "curator R1",
                       "decision_kind": "内容门准入判定（verifiable：日期规则）"})
         rec = self.dc.decide_verifiable(point, subject=date_str)
         return bool(rec.result)

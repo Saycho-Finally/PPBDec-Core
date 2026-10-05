@@ -99,7 +99,7 @@ def content_gate_date_point(claim: dict) -> DecisionPoint | None:
     return DecisionPoint(
         name="content_gate_r1_date", type=DecisionType.VERIFIABLE,
         predicate=lambda c: date_valid(c),
-        metadata={"migrated_from": "addenda-lm curator R1",
+        metadata={"migrated_from": "curator R1",
                   "decision_kind": "内容门准入判定（verifiable：日期规则确定性）"})
 
 
