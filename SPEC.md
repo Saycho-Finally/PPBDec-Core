@@ -1,4 +1,4 @@
-# PPBDec-Core Spec v0.3（2026-10-05）
+# PPBDec-Core Spec v0.5（2026-10-06）
 
 > 定位：**共享的判定/选择子层**——上层组件内部本来各自带着决策逻辑
 > （知识注入的内容门与路由、采样策略的早停与 selection、能力探测与预算），
@@ -52,12 +52,15 @@ LLM judge 的结果永远带 `shift_risk: high` 标注。
 ## 三、决策器光谱（从确定性到生成式）
 
 ```
-program_verifier（确定性，$0）
-  → rule_engine（确定性，$0）
-    → small_probe（内部表示/微模型，$低）
-      → micro_decision_model（2B 级，$低-中）
-        → llm_judge（生成式，$高，移位风险高）
+program_verifier（确定性，$0）          ← 已实现
+  → rule_engine（确定性，$0）           ← 已实现
+    → small_probe（内部表示/微模型，$低）   ← 未实现（见八、缺口核对表）
+      → micro_decision_model（2B 级，$低-中）← 未实现
+        → llm_judge（生成式，$高，移位风险高）  ← 桩（三条件守门，永不默认）
 ```
+
+另有 `majority_vote`：不属于光谱档位，是 **open 型决策点的判定器**
+（对上游采样候选做多数投票，与 coverage 三态守门配合）。
 
 规则：**沿光谱从左往右找第一个能处理该决策点的判定器**。升级到 llm_judge 需要
 显式声明理由（无谓词可用 + 枚举不完备 + 低移位风险三者同时成立）——这在实践中
@@ -65,24 +68,35 @@ program_verifier（确定性，$0）
 
 ## 四、证据链审计（DecisionRecord）
 
-每次决策落一条不可变记录（回应"模型不说话不代表没替你做决定"的问责问题）：
+每次决策落一条不可变记录（回应"模型不说话不代表没替你做决定"的问责问题）。
+下方为**真实字段形状**（与 `DecisionRecord.to_json()` 一致）：
 
 ```json
 {
-  "decision_id": "uuid",
-  "ts": 1790000000.0,
-  "point": {"name": "answer_selection", "type": "open",
-             "candidates_source": "sample(low, n=4, stop=3)",
-             "coverage_evidence": {"n_candidates": 4, "source_diversity": "temperature=0.7"}},
+  "decision_id": "5ac7a9cd769a",
+  "ts": 1791249095.67,
+  "point_name": "answer_selection",
+  "point_type": "open",
   "solver": "majority_vote(value_key)",
-  "result": {"winner": "3*4", "confidence": 0.75, "alternatives": ["2*6"]},
-  "outcome_check": {"verifiable": true, "correct": true},
-  "notes": "shift_risk: none (closed candidate set with program verifier)"
+  "result": "3*4",
+  "confidence": 0.75,
+  "alternatives": {"3*4": 3, "2*6": 1},
+  "coverage_evidence": {"n_candidates": 4, "source": "sample(low, n=4, stop=3)",
+                        "source_diversity": "temperature=0.7",
+                        "history_coverage_rate": null},
+  "shift_risk": "high",
+  "degraded": false,
+  "notes": "open selection; candidate set constructed upstream"
 }
 ```
 
-字段语义：`candidates_source`（候选从哪来——coverage 审计）、`solver`（用了哪档判定器）、
-`alternatives`（未被选中的选项——事后归因）、`outcome_check`（若事后可验证，回填对错）。
+字段语义：`coverage_evidence.source`（候选从哪来——coverage 审计）、`solver`
+（用了哪档判定器）、`alternatives`（未被选中的选项与票数——事后归因）、
+`shift_risk`（分布移位风险声明）、`degraded`（coverage 不足时的降级标记）。
+
+**事后回填**：`record_outcome(decision_id, ok, detail)` 以**追加**方式落一条
+`{"type": "outcome", ...}` 事件，原决策记录一字不改（不可变纪律），
+消费方按 `decision_id` 关联。本核不给不在账内的 decision_id 补写结果。
 
 ## 五、与编排层的接口
 
@@ -120,3 +134,27 @@ DecisionCore 的 `enumeration` 决策点消费**专家注册表**（ExpertRegist
 | 知识注入 | 内容门三规则（verifiable）→ 技能路由（enumeration） | 内容门谓词注册为 verifier |
 | 采样策略 | 早停（verifiable：票型收敛）→ selection（open+coverage）→ 档位（enumeration） | 已有 coverage/selection 分解，直接对接 |
 | 前缀缓存 | provider 层判定（verifiable：usage 字段探测）→ 杠杆选择（enumeration） | 能力探测结果注册为 rule_engine |
+
+## 八、缺口核对表（2026-10-06 逐条核对）
+
+对照实现、测试与验证实验报告逐条核对的结果。**这张表就是 D2 的交付物**，
+后续新增承诺时同步更新。
+
+| SPEC 承诺 | 状态 | 依据 |
+|---|---|---|
+| verifiable / enumeration / open 三类决策点 | 已实现 | `solvers.py` 三判定器 + 全部测试套件 |
+| open 的 coverage 三态（缺失拒绝 / 不足降级 / 充分受理） | 已实现（0.4.0） | `tests/test_coverage_degrade.py` 19 项 |
+| 判定器光谱五档 | 部分实现 | program_verifier / rule_engine / llm_judge（桩）已实现；`small_probe`、`micro_decision_model` **未实现**（无内部表示探针与微模型接入，无调用方） |
+| DecisionRecord 不可变 JSONL 落盘 | 已实现 | `_commit` append-only，由 DecisionCore 内部提交 |
+| `outcome_check` 事后回填对错 | 已实现（0.5.0） | `record_outcome`：追加 outcome 事件、原记录不改；`tests/test_outcome_backfill.py` 11 项 |
+| 迁移：知识注入内容门（verifiable） | 已实现 | `migrations/adapters.py` 迁移点 3 |
+| 迁移：采样早停（verifiable）+ selection（open） | 已实现 | 迁移点 1 / 4 |
+| 迁移：采样档位选择（enumeration） | 未实现 | 无对应迁移点，档位选择仍留在采样侧（见下） |
+| 迁移：前缀缓存能力探测（rule_engine） | 已实现 | 迁移点 2 + `migrations/runtime_cache_lm.py` |
+| 低置信改变控制流（并行 / 升级 / 拆任务） | 部分 | `RouteDecision` 携带置信度与备选；控制流变更属编排层（本仓库范围外，见第六节） |
+| 编排运行时 / 治理预检 / 可观测性 | 移出本仓库 | 0.3.0 起由 PPB-MoE 承载（含静默失败检测） |
+| 版本号与 CHANGELOG 一致性 | 已实现 | 审计器一致性检查项 |
+
+**未实现项的去向**：`small_probe` / `micro_decision_model` 需要接入内部表示或微模型，
+在出现第一个真实调用方之前不实现（避免无消费者的设计）；采样档位选择的迁移
+需采样侧先明确档位枚举的完备性来源；两者都在出现需求时按本 SPEC 的类型学补位。

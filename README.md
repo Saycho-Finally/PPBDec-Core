@@ -92,7 +92,7 @@ rec, winner = dc.decide_open(
 ```
 decisioncore/    核心库（core 类型学 / solvers 光谱 / registry 专家表 / route 路由决策）
 migrations/      迁移适配器包（黑盒注入原判定函数，逻辑零重写）
-tests/           56 项测试全过（核心七测 + 路由切换十测 + 运行时五测 + 迁移等价性十五测 + coverage 降级十九测）
+tests/           67 项测试全过（核心七测 + 路由切换十测 + 运行时五测 + 迁移等价性十五测 + coverage 降级十九测 + outcome 回填十一测）
 results/         E2 实测数据与证据链审计产出（JSON / JSONL）
 reports/         DecisionCore 验证实验报告（迁移等价性 / 开放决策实证）
 e2_task_family_a.py  任务族 A：5 段含已知 bug 的代码 + 15 个执行级验证的 gold bug

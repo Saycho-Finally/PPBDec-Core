@@ -30,7 +30,7 @@ from decisioncore.core import (MIN_CANDIDATES, CoverageEvidence, DecisionPoint,
 from decisioncore.solvers import DecisionCore, llm_judge_stub
 from decisioncore.registry import ExpertRegistry, ExpertSpec
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 __all__ = [
     "DecisionCore", "DecisionPoint", "DecisionType", "DecisionRecord",

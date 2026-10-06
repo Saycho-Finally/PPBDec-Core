@@ -131,6 +131,7 @@ class DecisionCore:
     def __init__(self, audit_path: str | None = None):
         self.audit_path = audit_path
         self.records: list[DecisionRecord] = []
+        self.outcomes: list[dict] = []          # 事后回填的 outcome 事件
 
     def decide_verifiable(self, point: DecisionPoint, subject) -> DecisionRecord:
         rec = solve_verifiable(point, subject)
@@ -149,6 +150,25 @@ class DecisionCore:
         rec, winner = solve_open_majority(point, vote_keys, min_candidates)
         self._commit(rec)
         return rec, winner
+
+    def record_outcome(self, decision_id: str, ok: bool, detail: str = "") -> dict | None:
+        """回填事后可验证的结果（SPEC §四的 outcome_check）。
+
+        以**追加**方式落一条 outcome 事件，原决策记录一字不改（不可变纪律）；
+        消费方按 decision_id 关联。decision_id 不在本核账内时返回 None——
+        不给没发生过的决策补写结果。
+        """
+        rec = next((r for r in self.records if r.decision_id == decision_id), None)
+        if rec is None:
+            return None
+        ev = {"type": "outcome", "decision_id": decision_id,
+              "point_name": rec.point_name, "point_type": rec.point_type,
+              "ts": time.time(), "ok": bool(ok), "detail": detail}
+        if self.audit_path:
+            with open(self.audit_path, "a", encoding="utf-8") as f:
+                f.write(json.dumps(ev, ensure_ascii=False) + "\n")
+        self.outcomes.append(ev)
+        return ev
 
     def _commit(self, rec: DecisionRecord) -> None:
         rec.decision_id = uuid.uuid4().hex[:12]

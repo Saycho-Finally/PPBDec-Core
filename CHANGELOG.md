@@ -7,6 +7,23 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-06
+
+### Added
+
+- **`outcome_check` 事后回填**：`DecisionCore.record_outcome(decision_id, ok, detail)`
+  以追加方式落 outcome 事件，原决策记录一字不改（不可变纪律）；
+  不在账内的 decision_id 拒绝补写。补齐 SPEC §四的承诺项
+- SPEC 新增**缺口核对表**（逐条核对实现与承诺），并修正 §四的 JSON 示例
+  （此前示例的嵌套 `point` 对象、`candidates_source`、内嵌 `outcome_check`
+  与真实字段形状不符）；光谱档位标注实现状态
+- `tests/test_outcome_backfill.py`：11 项测试，测试总数 56 → 67
+
+### Fixed
+
+- SPEC 缺口核对确认两处未兑现项并如实记录：`small_probe` / `micro_decision_model`
+  两档判定器未实现（无调用方，不预先设计）；采样档位选择（enumeration）未迁移
+
 ## [0.4.0] - 2026-10-05
 
 ### Added
